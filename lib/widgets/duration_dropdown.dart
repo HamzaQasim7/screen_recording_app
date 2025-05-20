@@ -34,23 +34,21 @@ class DurationDropdown extends StatelessWidget {
             child: DropdownButton<int>(
               isExpanded: true,
               value: selectedDuration,
-              onChanged:
-                  isEnabled
-                      ? (int? newValue) {
-                        if (newValue != null) {
-                          onDurationChanged(newValue);
-                        }
+              onChanged: isEnabled
+                  ? (int? newValue) {
+                      if (newValue != null) {
+                        onDurationChanged(newValue);
                       }
-                      : null,
-              items:
-                  AppConstants.recordingDurations.map<DropdownMenuItem<int>>((
-                    int value,
-                  ) {
-                    return DropdownMenuItem<int>(
-                      value: value,
-                      child: Text(_formatDuration(value)),
-                    );
-                  }).toList(),
+                    }
+                  : null,
+              items: AppConstants.recordingDurations.map<DropdownMenuItem<int>>((
+                int value,
+              ) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text(_formatDuration(value)),
+                );
+              }).toList(),
             ),
           ),
         ),

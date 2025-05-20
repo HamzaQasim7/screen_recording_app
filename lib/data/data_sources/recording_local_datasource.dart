@@ -97,6 +97,7 @@ class RecordingLocalDataSourceImpl implements RecordingLocalDataSource {
       final filePath = '${directory.path}/$fileName';
 
       // Start recording with controller
+
       _isRecording = true;
       _currentRecordingPath = filePath;
       _currentRecordingDuration = durationInSeconds;
@@ -104,11 +105,18 @@ class RecordingLocalDataSourceImpl implements RecordingLocalDataSource {
       onRecordingStatus(true);
 
       // Start recording
-      _screenRecorderController.start();
+
+      try {
+        _screenRecorderController.start();
+        await Future.delayed(const Duration(milliseconds: 300)); // Add a delay
+      } catch (e) {
+        throw RecordingException('Failed to start recording: ${e.toString()}');
+      }
 
       // Setup automatic stop after duration
       Future.delayed(Duration(seconds: durationInSeconds), () async {
         if (_isRecording) {
+          await Future.delayed(const Duration(milliseconds: 500));
           await stopRecording();
         }
       });
@@ -143,7 +151,14 @@ class RecordingLocalDataSourceImpl implements RecordingLocalDataSource {
           recordingEndTime.difference(_currentRecordingStartTime!).inSeconds;
 
       // Stop recording
-      _screenRecorderController.stop();
+
+      try {
+        _screenRecorderController.stop();
+        await Future.delayed(const Duration(milliseconds: 300)); // Add a delay
+      } catch (e) {
+        throw RecordingException('Failed to stop recording: ${e.toString()}');
+      }
+
       _isRecording = false;
 
       String filePath = '';
@@ -185,26 +200,37 @@ class RecordingLocalDataSourceImpl implements RecordingLocalDataSource {
   // Helper method to export recording as a video file
   Future<String?> _exportRecording(String outputPath) async {
     try {
-      // Based on the example, we need to use the exporter to create a file
-      // This implementation might need adjustment based on your needs
+      // Ensure recording is stopped
+      if (_isRecording) {
+        _screenRecorderController.stop();
+        _isRecording = false;
+      }
+
+      // Check if there are frames to export
       if (!_screenRecorderController.exporter.hasFrames) {
         throw RecordingException('No frames to export');
       }
 
-      // Export as video using FFmpeg or another method
-      // This is a placeholder - actual implementation depends on your requirements
-      // You might need to use a package like ffmpeg_kit_flutter to convert frames to a video
-
-      // For now, we'll export frames and save them as a placeholder
-      final frames = await _screenRecorderController.exporter.exportFrames();
-      if (frames == null || frames.isEmpty) {
-        throw RecordingException('Failed to export frames');
+      // Create the output file directory if it doesn't exist
+      final outputFile = File(outputPath);
+      final outputDir = outputFile.parent;
+      if (!await outputDir.exists()) {
+        await outputDir.create(recursive: true);
       }
 
-      // In a real implementation, you would convert these frames to a video
-      // For this example, we'll just return the path
+      // Use the direct export method from the controller
+      // This avoids dealing with raw frames directly
+      final result = await _screenRecorderController.exporter.exportFrames();
+      //path: outputPath
+
+      if (result == null || result.isEmpty) {
+        throw RecordingException('Failed to export video');
+      }
+
+      print("Video successfully exported to: $outputPath");
       return outputPath;
     } catch (e) {
+      print("Error in export recording: $e");
       throw RecordingException('Failed to export recording: ${e.toString()}');
     }
   }

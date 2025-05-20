@@ -13,16 +13,18 @@ class RecordingProvider with ChangeNotifier {
     required this.playbackViewModel,
   });
 
+  int _selectedDurationInSeconds = 30; // Default duration
+
   // Recording functionality
   RecordingState get recordingState => recordingViewModel.recordingState;
   Recording? get currentRecording => recordingViewModel.currentRecording;
   String? get recordingErrorMessage => recordingViewModel.errorMessage;
-  int get selectedDurationInSeconds =>
-      recordingViewModel.selectedDurationInSeconds;
+  int get selectedDurationInSeconds => _selectedDurationInSeconds;
   bool get isRecording => recordingViewModel.isRecording;
 
-  void setSelectedDuration(int seconds) {
-    recordingViewModel.setSelectedDuration(seconds);
+  void setSelectedDuration(int duration) {
+    _selectedDurationInSeconds = duration;
+    notifyListeners(); // Ensure this is called to update the UI
   }
 
   Future<void> startRecording() async {

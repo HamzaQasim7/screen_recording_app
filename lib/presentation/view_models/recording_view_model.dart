@@ -26,8 +26,36 @@ class RecordingViewModel with ChangeNotifier {
   }
 
   bool get isRecording => _recordingState == RecordingState.recording;
-
   Future<void> startRecording() async {
+    if (_recordingState == RecordingState.recording) return;
+
+    _recordingState = RecordingState.recording;
+    _errorMessage = null;
+    notifyListeners();
+
+    final result = await saveRecordingUseCase(
+      durationInSeconds: _selectedDurationInSeconds,
+      onRecordingStatus: (isRecording) {
+        _recordingState =
+            isRecording ? RecordingState.recording : RecordingState.idle;
+        notifyListeners();
+      },
+    );
+
+    result.fold(
+      (failure) {
+        _recordingState = RecordingState.error;
+        _errorMessage = failure.message;
+        notifyListeners();
+      },
+      (recording) {
+        _currentRecording = recording;
+        // keep state as 'recording' since stop happens later
+      },
+    );
+  }
+
+  Future<void> startRecordings() async {
     if (_recordingState == RecordingState.recording) {
       return;
     }
