@@ -18,7 +18,10 @@ class QuizRepositoryImpl implements QuizRepository {
       return Right(questions);
     } on AppException catch (e) {
       return Left(
-        Failure(message: 'Failed to get quiz questions', details: e.toString()),
+        GeneralFailure(
+          message: 'Failed to get quiz questions',
+          details: e.toString(),
+        ),
       );
     }
   }
@@ -32,8 +35,8 @@ class QuizRepositoryImpl implements QuizRepository {
       return Right(result);
     } on AppException catch (e) {
       return Left(
-        Failure(
-          message: 'Failed to submit quiz answers',
+        GeneralFailure(
+          message: 'Failed to get quiz questions',
           details: e.toString(),
         ),
       );
@@ -47,7 +50,10 @@ class QuizRepositoryImpl implements QuizRepository {
       return Right(result);
     } on AppException catch (e) {
       return Left(
-        Failure(message: 'Failed to reset quiz', details: e.toString()),
+        GeneralFailure(
+          message: 'Failed to get quiz questions',
+          details: e.toString(),
+        ),
       );
     }
   }

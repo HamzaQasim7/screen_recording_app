@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../widgets/quiz_progress_indicator.dart';
 import '../view_models/quiz_viewmodel.dart';
 
 class QuizScreen extends StatefulWidget {

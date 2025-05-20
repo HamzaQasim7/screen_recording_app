@@ -11,6 +11,10 @@ abstract class Failure extends Equatable {
 }
 
 // Recording related failures
+class GeneralFailure extends Failure {
+  const GeneralFailure({required super.message, super.details});
+}
+
 class RecordingFailure extends Failure {
   const RecordingFailure({required super.message, super.details});
 }

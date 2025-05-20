@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:job_test/presentation/screens/playback_screen.dart';
+import 'package:job_test/presentation/screens/quiz_screen.dart';
 import 'package:job_test/presentation/screens/recording_screens.dart';
+import 'package:job_test/presentation/view_models/quiz_viewmodel.dart';
 import 'package:job_test/presentation/view_models/recording_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +16,7 @@ class ScreenRecorderApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => sl<RecordingProvider>()),
+        ChangeNotifierProvider(create: (_) => sl<QuizViewModel>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -47,11 +50,12 @@ class ScreenRecorderApp extends StatelessWidget {
             ),
           ),
         ),
-        initialRoute: '/',
-        routes: {
-          '/': (context) => const RecordingScreen(),
-          '/playback': (context) => const PlaybackScreen(),
-        },
+        home: QuizScreen(),
+        // initialRoute: '/',
+        // routes: {
+        //   '/': (context) => const RecordingScreen(),
+        //   '/playback': (context) => const PlaybackScreen(),
+        // },
       ),
     );
   }
