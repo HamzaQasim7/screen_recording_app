@@ -59,7 +59,15 @@ class RecordingViewModel with ChangeNotifier {
     if (_recordingState == RecordingState.recording) {
       return;
     }
-
+    (recording) {
+      if (recording == null) {
+        _recordingState = RecordingState.error;
+        _errorMessage = 'Failed to start recording: No valid data received.';
+        notifyListeners();
+        return;
+      }
+      _currentRecording = recording;
+    };
     _recordingState = RecordingState.recording;
     _errorMessage = null;
     notifyListeners();
@@ -101,6 +109,13 @@ class RecordingViewModel with ChangeNotifier {
         notifyListeners();
       },
       (recording) {
+        if (recording == null) {
+          _recordingState = RecordingState.error;
+          _errorMessage = 'Export failed: No frames to export.';
+          notifyListeners();
+          return;
+        }
+
         _currentRecording = recording;
         _recordingState = RecordingState.idle;
         notifyListeners();

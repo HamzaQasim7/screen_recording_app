@@ -50,12 +50,12 @@ class ScreenRecorderApp extends StatelessWidget {
             ),
           ),
         ),
-        home: QuizScreen(),
-        // initialRoute: '/',
-        // routes: {
-        //   '/': (context) => const RecordingScreen(),
-        //   '/playback': (context) => const PlaybackScreen(),
-        // },
+        // home: QuizScreen(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const RecordingScreen(),
+          '/playback': (context) => const PlaybackScreen(),
+        },
       ),
     );
   }
